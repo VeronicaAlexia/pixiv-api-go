@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"github.com/VeronicaAlexia/pixiv-api-go/pixivstruct"
 	"io"
 	"math/rand"
 	"net/url"
@@ -130,18 +129,28 @@ func ChromeDriverLogin() (*AccessToken, error) {
 	// input code
 	var code string
 	fmt.Printf("code:")
-	fmt.Scanln(&code)
-	return loginPixiv(codeVerifier, code)
-
+	_, err := fmt.Scanln(&code)
+	if err != nil {
+		fmt.Println("input error:", err)
+	} else {
+		return loginPixiv(codeVerifier, code)
+	}
+	return nil, err
 }
 
 type AccessToken struct {
-	Error        pixivstruct.Error `json:"error"`
-	AccessToken  string            `json:"access_token"`
-	ExpiresIn    int               `json:"expires_in"`
-	TokenType    string            `json:"token_type"`
-	Scope        string            `json:"scope"`
-	RefreshToken string            `json:"refresh_token"`
+	Error struct {
+		UserMessage        string `json:"user_message"`
+		Message            string `json:"message"`
+		Reason             string `json:"reason"`
+		UserMessageDetails struct {
+		} `json:"user_message_details"`
+	} `json:"error"`
+	AccessToken  string `json:"access_token"`
+	ExpiresIn    int    `json:"expires_in"`
+	TokenType    string `json:"token_type"`
+	Scope        string `json:"scope"`
+	RefreshToken string `json:"refresh_token"`
 	User         struct {
 		ProfileImageUrls struct {
 			Px16X16   string `json:"px_16x16"`
