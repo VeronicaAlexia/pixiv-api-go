@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/VeronicaAlexia/pixiv-go/pixiv"
-	"github.com/VeronicaAlexia/pixiv-go/pkg/request"
+	"github.com/VeronicaAlexia/pixiv-api-go/pixiv"
+	"github.com/VeronicaAlexia/pixiv-api-go/pkg/request"
 	"testing"
 )
 

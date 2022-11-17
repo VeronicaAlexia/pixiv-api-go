@@ -1,4 +1,4 @@
-module github.com/VeronicaAlexia/pixiv-go
+module github.com/VeronicaAlexia/pixiv-api-go
 
 go 1.19
 

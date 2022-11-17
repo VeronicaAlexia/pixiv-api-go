@@ -6,7 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"github.com/VeronicaAlexia/pixiv-go/pixivstruct"
+	"github.com/VeronicaAlexia/pixiv-api-go/pixivstruct"
 	"io"
 	"math/rand"
 	"net/url"
