@@ -1,54 +1,17 @@
 package pixiv
 
 import (
-	"crypto/md5"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 	"github.com/VeronicaAlexia/pixiv-api-go/pixiv/pixivstruct"
 	"github.com/VeronicaAlexia/pixiv-api-go/pixiv/request"
-	"io"
 	"math/rand"
 	"net/url"
 	"os/exec"
 	"runtime"
 	"strings"
-	"time"
 )
-
-func genClientHash(clientTime string) string {
-	h := md5.New()
-	_, _ = io.WriteString(h, clientTime)
-	_, _ = io.WriteString(h, "28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0bae2c")
-	return hex.EncodeToString(h.Sum(nil))
-}
-
-func RefreshAuth() bool {
-	client_time := time.Now().Format(time.RFC3339)
-	Header := map[string]string{
-		"X-Client-Time": client_time,
-		"X-Client-Hash": genClientHash(client_time),
-	}
-	params := map[string]string{
-		"get_secure_url": "1",
-		"client_id":      "MOBrBDS8blbauoSck0ZfDbtuzpyT",
-		"client_secret":  "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj",
-		"grant_type":     "refresh_token",
-		"refresh_token":  request.PixivRefreshToken,
-	}
-	response := request.Post("https://oauth.secure.pixiv.net/auth/token", params, Header).Json(
-		&pixivstruct.AccessToken{}).(*pixivstruct.AccessToken)
-
-	if response.AccessToken == "" {
-		fmt.Println("refresh auth error  ", response.AccessToken)
-		return false
-	} else {
-		fmt.Println("refresh auth success,new token: ", response.AccessToken)
-	}
-	return true
-
-}
 
 // Generate a random token
 func generateURLSafeToken(length int) string {
