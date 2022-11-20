@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 )
 
 type Request struct {
@@ -85,10 +84,9 @@ func (req *Request) NewRequest(Head ...map[string]string) *Response {
 func (resp *Response) Content() []byte {
 	resp.content, _ = io.ReadAll(resp.Body)
 	if strings.Contains(string(resp.content), "Token") {
-		fmt.Println("Token expired, Refreshing...")
-		RefreshAuth()
-		resp.content = resp.Request.NewRequest().Content()
-		time.Sleep(2 * time.Second)
+		fmt.Println("Token expired, you need to refresh it.")
+		//resp.content = resp.Request.NewRequest().Content()
+		//time.Sleep(2 * time.Second)
 	}
 	return resp.content
 }

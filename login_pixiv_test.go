@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/VeronicaAlexia/pixiv-api-go/pkg/request"
+	"github.com/VeronicaAlexia/pixiv-api-go/pixiv"
 	"testing"
 )
 
 func TestLoginPixiv(t *testing.T) {
-	if login, err := request.ChromeDriverLogin(); err != nil {
+	if login, err := pixiv.ChromeDriverLogin(); err != nil {
 		t.Error(err)
 	} else {
 		t.Log("login:", login)

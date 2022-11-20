@@ -2,8 +2,8 @@ package pixiv
 
 import (
 	"fmt"
-	"github.com/VeronicaAlexia/pixiv-api-go/pixivstruct"
-	"github.com/VeronicaAlexia/pixiv-api-go/pkg/request"
+	"github.com/VeronicaAlexia/pixiv-api-go/pixiv/pixivstruct"
+	"github.com/VeronicaAlexia/pixiv-api-go/pixiv/request"
 	"github.com/pkg/errors"
 )
 

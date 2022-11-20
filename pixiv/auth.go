@@ -1,4 +1,4 @@
-package request
+package pixiv
 
 import (
 	"crypto/md5"
@@ -6,6 +6,8 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"github.com/VeronicaAlexia/pixiv-api-go/pixiv/pixivstruct"
+	"github.com/VeronicaAlexia/pixiv-api-go/pixiv/request"
 	"io"
 	"math/rand"
 	"net/url"
@@ -18,7 +20,7 @@ import (
 func genClientHash(clientTime string) string {
 	h := md5.New()
 	_, _ = io.WriteString(h, clientTime)
-	_, _ = io.WriteString(h, ClientHashSecret)
+	_, _ = io.WriteString(h, "28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0bae2c")
 	return hex.EncodeToString(h.Sum(nil))
 }
 
@@ -30,12 +32,13 @@ func RefreshAuth() bool {
 	}
 	params := map[string]string{
 		"get_secure_url": "1",
-		"client_id":      ClientID,
-		"client_secret":  ClientSecret,
+		"client_id":      "MOBrBDS8blbauoSck0ZfDbtuzpyT",
+		"client_secret":  "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj",
 		"grant_type":     "refresh_token",
-		"refresh_token":  PixivRefreshToken,
+		"refresh_token":  request.PixivRefreshToken,
 	}
-	response := Post("https://oauth.secure.pixiv.net/auth/token", params, Header).Json(&AccessToken{}).(*AccessToken)
+	response := request.Post("https://oauth.secure.pixiv.net/auth/token", params, Header).Json(
+		&pixivstruct.AccessToken{}).(*pixivstruct.AccessToken)
 
 	if response.AccessToken == "" {
 		fmt.Println("refresh auth error  ", response.AccessToken)
@@ -82,7 +85,7 @@ func get_pixiv_login_url() (string, string) {
 	return codeVerifier, "https://app-api.pixiv.net/web/v1/login" + "?" + urlValues.Encode()
 }
 
-func loginPixiv(Verifier string, code string) (*AccessToken, error) {
+func loginPixiv(Verifier string, code string) (*pixivstruct.AccessToken, error) {
 	params := map[string]string{
 		"client_id":      "MOBrBDS8blbauoSck0ZfDbtuzpyT",
 		"client_secret":  "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj",
@@ -92,7 +95,7 @@ func loginPixiv(Verifier string, code string) (*AccessToken, error) {
 		"include_policy": "true",
 		"redirect_uri":   "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback",
 	}
-	response := Post("https://oauth.secure.pixiv.net/auth/token", params).Json(&AccessToken{}).(*AccessToken)
+	response := request.Post("https://oauth.secure.pixiv.net/auth/token", params).Json(&pixivstruct.AccessToken{}).(*pixivstruct.AccessToken)
 	if response.AccessToken == "" {
 		return nil, fmt.Errorf("login login pixiv error: %s", response.Error)
 	} else {
@@ -114,7 +117,7 @@ func openbrowser(url string) error {
 	}
 	return err
 }
-func ChromeDriverLogin() (*AccessToken, error) {
+func ChromeDriverLogin() (*pixivstruct.AccessToken, error) {
 	codeVerifier, loginURL := get_pixiv_login_url() // Get the login URL and code verifier
 	fmt.Println("please open the following link in your browser:", loginURL)
 	fmt.Println("please press f12 to open the developer console, and switch to the network tab.")
@@ -136,56 +139,4 @@ func ChromeDriverLogin() (*AccessToken, error) {
 		return loginPixiv(codeVerifier, code)
 	}
 	return nil, err
-}
-
-type AccessToken struct {
-	Error struct {
-		UserMessage        string `json:"user_message"`
-		Message            string `json:"message"`
-		Reason             string `json:"reason"`
-		UserMessageDetails struct {
-		} `json:"user_message_details"`
-	} `json:"error"`
-	AccessToken  string `json:"access_token"`
-	ExpiresIn    int    `json:"expires_in"`
-	TokenType    string `json:"token_type"`
-	Scope        string `json:"scope"`
-	RefreshToken string `json:"refresh_token"`
-	User         struct {
-		ProfileImageUrls struct {
-			Px16X16   string `json:"px_16x16"`
-			Px50X50   string `json:"px_50x50"`
-			Px170X170 string `json:"px_170x170"`
-		} `json:"profile_image_urls"`
-		ID                     string `json:"id"`
-		Name                   string `json:"name"`
-		Account                string `json:"account"`
-		MailAddress            string `json:"mail_address"`
-		IsPremium              bool   `json:"is_premium"`
-		XRestrict              int    `json:"x_restrict"`
-		IsMailAuthorized       bool   `json:"is_mail_authorized"`
-		RequirePolicyAgreement bool   `json:"require_policy_agreement"`
-	} `json:"user"`
-	Response struct {
-		AccessToken  string `json:"access_token"`
-		ExpiresIn    int    `json:"expires_in"`
-		TokenType    string `json:"token_type"`
-		Scope        string `json:"scope"`
-		RefreshToken string `json:"refresh_token"`
-		User         struct {
-			ProfileImageUrls struct {
-				Px16X16   string `json:"px_16x16"`
-				Px50X50   string `json:"px_50x50"`
-				Px170X170 string `json:"px_170x170"`
-			} `json:"profile_image_urls"`
-			ID                     string `json:"id"`
-			Name                   string `json:"name"`
-			Account                string `json:"account"`
-			MailAddress            string `json:"mail_address"`
-			IsPremium              bool   `json:"is_premium"`
-			XRestrict              int    `json:"x_restrict"`
-			IsMailAuthorized       bool   `json:"is_mail_authorized"`
-			RequirePolicyAgreement bool   `json:"require_policy_agreement"`
-		} `json:"user"`
-	} `json:"response"`
 }

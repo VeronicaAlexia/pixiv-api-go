@@ -71,6 +71,52 @@ type Workspace struct {
 	WorkspaceImageURL string `json:"workspace_image_url"`
 }
 
+type AccessToken struct {
+	Error        Error  `json:"error"`
+	AccessToken  string `json:"access_token"`
+	ExpiresIn    int    `json:"expires_in"`
+	TokenType    string `json:"token_type"`
+	Scope        string `json:"scope"`
+	RefreshToken string `json:"refresh_token"`
+	User         struct {
+		ProfileImageUrls struct {
+			Px16X16   string `json:"px_16x16"`
+			Px50X50   string `json:"px_50x50"`
+			Px170X170 string `json:"px_170x170"`
+		} `json:"profile_image_urls"`
+		ID                     string `json:"id"`
+		Name                   string `json:"name"`
+		Account                string `json:"account"`
+		MailAddress            string `json:"mail_address"`
+		IsPremium              bool   `json:"is_premium"`
+		XRestrict              int    `json:"x_restrict"`
+		IsMailAuthorized       bool   `json:"is_mail_authorized"`
+		RequirePolicyAgreement bool   `json:"require_policy_agreement"`
+	} `json:"user"`
+	Response struct {
+		AccessToken  string `json:"access_token"`
+		ExpiresIn    int    `json:"expires_in"`
+		TokenType    string `json:"token_type"`
+		Scope        string `json:"scope"`
+		RefreshToken string `json:"refresh_token"`
+		User         struct {
+			ProfileImageUrls struct {
+				Px16X16   string `json:"px_16x16"`
+				Px50X50   string `json:"px_50x50"`
+				Px170X170 string `json:"px_170x170"`
+			} `json:"profile_image_urls"`
+			ID                     string `json:"id"`
+			Name                   string `json:"name"`
+			Account                string `json:"account"`
+			MailAddress            string `json:"mail_address"`
+			IsPremium              bool   `json:"is_premium"`
+			XRestrict              int    `json:"x_restrict"`
+			IsMailAuthorized       bool   `json:"is_mail_authorized"`
+			RequirePolicyAgreement bool   `json:"require_policy_agreement"`
+		} `json:"user"`
+	} `json:"response"`
+}
+
 type ProfilePublicity struct {
 	Gender    string `json:"gender"`
 	Region    string `json:"region"`
