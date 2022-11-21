@@ -27,21 +27,18 @@ go get github.com/VeronicaAlexia/pixiv-api-go
 ``` 
 package main
 
-import (
-	"fmt"
-	"github.com/VeronicaAlexia/pixiv-api-go/pixiv" 
-)
+import "github.com/VeronicaAlexia/pixiv-api-go/pixiv"  
 
 func main() {
 	if login, err := request.ChromeDriverLogin(); err != nil {
 		panic(err)
-	} else {  
-      init_pixiv := pixiv.InitPixivAppApi(login.AccessToken, login.RefreshToken)
-      if Detail, err := init_pixiv.IllustDetail("87454525"); err == nil {
-          t.Log(Detail)
-      } else {
-          t.Error(err)
-      } 
-    }
+	} else {
+		init_pixiv := pixiv.InitPixivAppApi(login.AccessToken, login.RefreshToken)
+		if Detail, err := init_pixiv.IllustDetail("87454525"); err == nil {
+			t.Log(Detail)
+		} else {
+			t.Error(err)
+		}
+	}
 }
 ```
