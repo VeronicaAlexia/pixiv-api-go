@@ -35,18 +35,13 @@ import (
 func main() {
 	if login, err := request.ChromeDriverLogin(); err != nil {
 		panic(err)
-	} else {
-		request.PixivRefreshToken = login.RefreshToken
-		request.PixivToken = login.AccessToken
-		println("PixivRefreshToken: ", login.RefreshToken)
-		println("PixivToken: ", login.AccessToken)
-		init_pixiv := pixiv.InitPixivAppApi()
-		if Detail, err := init_pixiv.IllustDetail("87454525"); err == nil {
-			fmt.Println(Detail)
-		} else {
-			panic(err)
-		}
-	}
-
+	} else {  
+      init_pixiv := pixiv.InitPixivAppApi(login.AccessToken, login.RefreshToken)
+      if Detail, err := init_pixiv.IllustDetail("87454525"); err == nil {
+          t.Log(Detail)
+      } else {
+          t.Error(err)
+      } 
+    }
 }
 ```

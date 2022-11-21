@@ -9,6 +9,7 @@ import (
 var PixivKey = struct {
 	Token        string
 	RefreshToken string
+	Header       map[string]string // Request Header
 }{}
 
 type Request struct {

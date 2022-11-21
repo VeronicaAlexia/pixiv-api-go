@@ -1,22 +1,32 @@
 package request
 
-func (req *Request) AddHeader(key string, value string) {
+import "fmt"
+
+func (req *Request) AddHead(key string, value string) {
 	req.Header[key] = value
 }
 
 func (req *Request) Headers() {
 	// Set default headers for request
-	req.AddHeader("User-Agent", "PixivIOSApp/7.6.2 (iOS 12.2; iPhone9,1)")
-	req.AddHeader("App-OS", "ios")
-	req.AddHeader("App-OS-VERSION", "12.2")
-	req.AddHeader("App-Version", "7.6.2")
-	req.AddHeader("Authorization", "Bearer "+PixivKey.Token)
+	req.requests.Header.Set("Authorization", "Bearer "+PixivKey.Token)
 	if req.Mode == "POST" {
-		req.AddHeader("Content-Type", "application/x-www-form-urlencoded")
+		req.requests.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	} else {
-		req.AddHeader("Content-Type", "application/json")
+		req.requests.Header.Set("Content-Type", "application/json")
+	}
+
+	for k, v := range PixivKey.Header {
+		req.requests.Header.Set(k, v)
 	}
 	for k, v := range req.Header {
 		req.requests.Header.Set(k, v)
+	}
+	// req.ShowHeaders()// Show headers key and value
+
+}
+
+func (req *Request) ShowHeaders() {
+	for k, v := range req.requests.Header {
+		fmt.Println("[", k, "]:", v)
 	}
 }

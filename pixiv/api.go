@@ -16,6 +16,12 @@ type Api struct {
 func InitPixivAppApi(PixivToken, PixivRefreshToken string) *Api {
 	request.PixivKey.Token = PixivToken
 	request.PixivKey.RefreshToken = PixivRefreshToken
+	request.PixivKey.Header = map[string]string{
+		"App-OS":         "ios",
+		"App-OS-VERSION": "12.2",
+		"App-Version":    "7.6.2",
+		"User-Agent":     "PixivIOSApp/7.6.2 (iOS 12.2; iPhone9,1)",
+	}
 	return &Api{
 		PixivToken:        PixivToken,
 		PixivRefreshToken: PixivRefreshToken,
