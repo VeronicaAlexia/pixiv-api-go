@@ -1,7 +1,5 @@
 package request
 
-var PixivToken string
-
 func (req *Request) AddHeader(key string, value string) {
 	req.Header[key] = value
 }
@@ -12,7 +10,7 @@ func (req *Request) Headers() {
 	req.AddHeader("App-OS", "ios")
 	req.AddHeader("App-OS-VERSION", "12.2")
 	req.AddHeader("App-Version", "7.6.2")
-	req.AddHeader("Authorization", "Bearer "+PixivToken)
+	req.AddHeader("Authorization", "Bearer "+PixivKey.Token)
 	if req.Mode == "POST" {
 		req.AddHeader("Content-Type", "application/x-www-form-urlencoded")
 	} else {

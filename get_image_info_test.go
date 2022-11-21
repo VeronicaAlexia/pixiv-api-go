@@ -2,18 +2,15 @@ package main
 
 import (
 	"github.com/VeronicaAlexia/pixiv-api-go/pixiv"
-	"github.com/VeronicaAlexia/pixiv-api-go/pixiv/request"
 	"testing"
 )
 
 // Path: get_image_info_test.go
-// Compare this snippet from pkg\request\request.go:
-// package request
 
 func TestGetImageInfo(t *testing.T) {
-	init_pixiv := pixiv.InitPixivAppApi()
-	request.PixivRefreshToken = ""
-	request.PixivToken = ""
+	// You need to login first to get the token and refresh token
+	PixivRefreshToke, PixivToken := "", ""
+	init_pixiv := pixiv.InitPixivAppApi(PixivToken, PixivRefreshToke)
 	if Detail, err := init_pixiv.IllustDetail("87454525"); err == nil {
 		t.Log(Detail)
 	} else {

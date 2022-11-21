@@ -1,5 +1,3 @@
-# This project is a pixiv android api for go.
-
 <h1 align="center">
   <img src="./pixiv-logo.svg" alt="pixiv_logo" width ="400">
   <br><a href="https://www.pixiv.net/">pixiv</a> api for golang<br>  

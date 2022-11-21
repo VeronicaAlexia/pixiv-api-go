@@ -17,25 +17,26 @@ func gen_clientHash(clientTime string) string {
 }
 
 func RefreshAuth() bool {
-	client_time := time.Now().Format(time.RFC3339)
-	Header := map[string]string{
-		"X-Client-Time": client_time,
-		"X-Client-Hash": gen_clientHash(client_time),
-	}
 	params := map[string]string{
 		"get_secure_url": "1",
 		"client_id":      "MOBrBDS8blbauoSck0ZfDbtuzpyT",
 		"client_secret":  "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj",
 		"grant_type":     "refresh_token",
-		"refresh_token":  PixivRefreshToken,
+		"refresh_token":  PixivKey.RefreshToken,
 	}
-	response := Post("https://oauth.secure.pixiv.net/auth/token", params, Header).Json(
-		&pixivstruct.AccessToken{}).(*pixivstruct.AccessToken)
+	client_time := time.Now().Format(time.RFC3339)
+	response := Post(
+		"https://oauth.secure.pixiv.net/auth/token",
+		params, map[string]string{
+			"X-Client-Time": client_time,
+			"X-Client-Hash": gen_clientHash(client_time),
+		}).Json(&pixivstruct.AccessToken{}).(*pixivstruct.AccessToken)
 
 	if response.AccessToken == "" {
 		fmt.Println("refresh auth error  ", response.AccessToken)
 		return false
 	} else {
+		PixivKey.Token = response.AccessToken // update token in memory
 		fmt.Println("refresh auth success,new token: ", response.AccessToken)
 	}
 	return true

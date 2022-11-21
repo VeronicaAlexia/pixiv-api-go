@@ -8,12 +8,18 @@ import (
 	"strings"
 )
 
-// Api -- App-API (6.x - app-api.pixiv.net)
 type Api struct {
+	PixivToken        string
+	PixivRefreshToken string
 }
 
-func InitPixivAppApi() *Api {
-	return &Api{}
+func InitPixivAppApi(PixivToken, PixivRefreshToken string) *Api {
+	request.PixivKey.Token = PixivToken
+	request.PixivKey.RefreshToken = PixivRefreshToken
+	return &Api{
+		PixivToken:        PixivToken,
+		PixivRefreshToken: PixivRefreshToken,
+	}
 }
 
 func (a *Api) UserDetail(uid int) (*pixivstruct.UserDetail, error) {

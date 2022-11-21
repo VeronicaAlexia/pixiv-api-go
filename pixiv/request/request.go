@@ -7,27 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 )
-
-type Request struct {
-	Path     string            // API Path
-	Mode     string            // GET, POST, PUT
-	Header   map[string]string // Request Header
-	Query    map[string]string // Query Params
-	Params   url.Values        // init in url.Values
-	requests *http.Request     // init in http.NewRequest
-}
-
-type Response struct {
-	Response *http.Response // Response from http.DefaultClient.Do
-	Request  *Request       // Request from type Request
-	Body     io.ReadCloser  // Body from Response
-	content  []byte         // Body -> Content []byte
-	text     string         // Content -> string
-}
-
-var PixivRefreshToken string
 
 func Get(
 	url_api string,
@@ -85,10 +65,14 @@ func (req *Request) NewRequest(Head ...map[string]string) *Response {
 func (resp *Response) Content() []byte {
 	resp.content, _ = io.ReadAll(resp.Body)
 	if strings.Contains(string(resp.content), "Token") {
-		fmt.Println("Token expired, you need to refresh it.")
-		RefreshAuth() // Refresh token and save it to PixivRefreshToken
-		resp.content = resp.Request.NewRequest().Content()
-		time.Sleep(2 * time.Second)
+		for i := 0; i < 3; i++ {
+			fmt.Println("retry token count:", i)
+			if RefreshAuth() {
+				resp.content = resp.Request.NewRequest().Content() // Retry request Content
+				return resp.content
+			}
+		}
+		panic("Refresh token failed, please check your network and try again.")
 	}
 	return resp.content
 }
@@ -105,8 +89,17 @@ func (resp *Response) Text() string {
 
 func (resp *Response) Json(value interface{}) interface{} {
 	resp.Content() //	Init resp.content
-	if err := json.Unmarshal(resp.content, value); err != nil {
-		fmt.Println("json.Unmarshal error:", err)
+	if resp.content != nil {
+		if err := json.Unmarshal(resp.content, value); err != nil {
+			fmt.Println("======================")
+			fmt.Println("mode:", resp.Request.Mode)
+			fmt.Println("url:", resp.Request.Path)
+			fmt.Println("error:", err)
+			fmt.Println("======================")
+			return value
+		}
+	} else {
+		fmt.Println("resp.content is nil, url:", resp.Request.Path)
 	}
 	return value
 }
